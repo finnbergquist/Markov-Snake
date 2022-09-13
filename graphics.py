@@ -1,7 +1,6 @@
 import constants
 import sys
 import board
-import numpy as np
 import pygame
 
 
@@ -16,6 +15,7 @@ def intitialize():
     pygame.init()
     display = pygame.display.set_mode((constants.WIDTH,constants.HEIGHT))
     display.fill(constants.WHITE)
+    pygame.display.set_caption('Color Snake')
     return display
 
 def getColor(visits):
@@ -74,9 +74,11 @@ def showBoard(display, numberBoard):
 
 def gameLoop(display, markovBoard):
     ''' Infinite loop with time breaks in between each loop. The loop will first check
-    for any quit events, and exit if there is one. Then it will create the rectangle objects
-    for the board using thebuilt in pygame methods in the showBoard method. Then it transitions 
-    the markovBoard which will change the visits list. Finally it updates the display with the 
+    for any quit events, and exit if there is one. After, it will check for a mouse click.
+    If there is one, then it will make the position of th click the current state location
+    of the color changing snake. Then, it will create the rectangle objects
+    for the board using the built in pygame methods implemented in the showBoard method. Then, it transitions 
+    the markovBoard which will change the visits list. Finally, it updates the display with the 
     new colors for the board and then waits a few milliseconds.
 
     Args:
@@ -94,7 +96,14 @@ def gameLoop(display, markovBoard):
             if event.type == pygame.KEYDOWN:
                 pygame.quit()
                 sys.exit()
-            
+
+            if event.type == pygame.MOUSEBUTTONUP:
+                pos = pygame.mouse.get_pos()
+                x = int(pos[0] / constants.WIDTH * constants.NUMBER_OF_SQUARES_WIDE)
+                y = int(pos[1] / constants.HEIGHT * constants.NUMBER_OF_SQUARES_HIGH)
+                pos = x + y * constants.NUMBER_OF_SQUARES_WIDE
+                markovBoard.currentState = pos
+
         showBoard(display, markovBoard.visits)
         markovBoard.transition()
         pygame.display.update()
@@ -102,9 +111,24 @@ def gameLoop(display, markovBoard):
 
 
 def main():
+    if len(sys.argv) == 2: #If user enters an int through commandline, reset default values
+        size = int(sys.argv[1])
+        constants.NUMBER_OF_SQUARES_WIDE = size
+        constants.NUMBER_OF_SQUARES_HIGH = size
+        constants.SQUARE_HEIGHT = round(constants.HEIGHT/size)
+        constants.SQUARE_WIDTH = round(constants.WIDTH/size)
+        numSquares = size**2
+        markovBoard = board.MarkovBoard(numSquares=numSquares)
+
+    elif len(sys.argv) == 1:#otherwise, build default markovBoard( 20 x 20 )
+        markovBoard = board.MarkovBoard()
+
+    else: #too many commandline args
+        raise ValueError('Invalid number of commandline arguments')
+
     display = intitialize()
-    markovBoard = board.MarkovBoard()
     gameLoop(display, markovBoard)
+
 
 
 if __name__=="__main__":
