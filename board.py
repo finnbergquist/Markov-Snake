@@ -6,6 +6,10 @@ class MarkovBoard:
         ''' A two dimentional enviornment with squares. Each square stores a number for how many visits
         the snake has made. That number will determine the color of the square.
 
+        Args:
+            num_squares: board size, by default set to number of squares wide*high
+        Return:
+            none
         '''
         self.num_squares = num_squares
 
@@ -23,8 +27,10 @@ class MarkovBoard:
         '''Called in the initializer. Creates the transition matrix. Transition probabilties are equal probability
         up, right, down, left. Except for edge cases, they still have equal chance of all possible moves.
 
-        Args: self
-        Return: Python Dictionary of Python Dictionaries
+        Args: 
+            none
+        Return: 
+            transitionMatrix: Python Dictionary of Python Dictionaries
         '''
         transitionMatrix = {}
         for i in range(0, self.num_squares-1):
@@ -40,9 +46,11 @@ class MarkovBoard:
         return transitionMatrix
 
     def transition(self):
-        '''Returns the next state that the snake goes to
-        Args: None
-        Return: int next state
+        '''Sets the next state that the snake goes to, and updates the visit count list
+        Args: 
+            none
+        Return: 
+            none
         '''
         nextState = random.choices(self.states, weights=list(self.transitionMatrix[self.currentState].values()))[0]
         self.visits[nextState] += 1
