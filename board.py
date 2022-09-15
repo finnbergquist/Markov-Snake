@@ -17,7 +17,6 @@ class MarkovBoard:
         self.visits = [0] * numSquares
          
         self.transitionMatrix = self.buildTransitionMatrix()
-        print(self.transitionMatrix)
 
         self.states = list(self.transitionMatrix.keys())
 
@@ -61,23 +60,3 @@ class MarkovBoard:
         self.currentState = nextState
         return
 
-
-    
-'''
-board = MarkovBoard()
-print(board.currentState)
-board.transition()
-print(board.currentState)
-board.transition()
-print(board.currentState)
-board.transition()
-print(board.currentState)
-board.transition()
-print(board.currentState)
-board.transition()
-print(board.currentState)
-board.transition()
-print(board.currentState)
-
-
-print(board.visits)'''
