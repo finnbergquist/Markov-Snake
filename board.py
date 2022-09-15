@@ -15,8 +15,9 @@ class MarkovBoard:
 
         #Will hold how many times a position has been visited->determining that position's color
         self.visits = [0] * numSquares
-        
+         
         self.transitionMatrix = self.buildTransitionMatrix()
+        print(self.transitionMatrix)
 
         self.states = list(self.transitionMatrix.keys())
 
@@ -33,9 +34,9 @@ class MarkovBoard:
             transitionMatrix: Python Dictionary of Python Dictionaries
         '''
         transitionMatrix = {}
-        for i in range(0, self.numSquares-1):
+        for i in range(0, self.numSquares):
             probDistribution = {}
-            for j in range(0,self.numSquares-1):
+            for j in range(0,self.numSquares):
                 if j == i-1 or j == i+1 or j == i + (self.numSquares**(1/2)) or j == i-(self.numSquares**(1/2)):
                     probDistribution[j] = 0.5
                 else:
@@ -52,6 +53,9 @@ class MarkovBoard:
         Return: 
             none
         '''
+        '''if self.visits[self.currentState]==100:
+            self.visits[self.currentState]=0'''
+
         self.visits[self.currentState] += 1
         nextState = random.choices(self.states, weights=list(self.transitionMatrix[self.currentState].values()))[0]
         self.currentState = nextState
